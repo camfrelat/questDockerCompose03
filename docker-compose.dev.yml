@@ -6,10 +6,21 @@ services:
     command: npm run dev
     volumes:
       - ./server/src/:/app/src/
+    environment:
+      - URL_MONGO=mongodb://mongodb:27017/test
+    depends_on:
+      - mongodb
+    networks:
+      - db_net
   mongodb:
     image: mongo
+    ports:
+      - 27017:27017
+
     volumes:
       - ./data:/data/db
+    networks:
+      - db_net
 
   client:
     build: ./client
@@ -18,3 +29,8 @@ services:
     command: npm run start
     volumes:
       - ./client/src/:/app/src
+    networks:
+      - db_net
+
+networks:
+  db_net:
